@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1280, height=720">
+<title>CIOC Pitch Deck</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --slide-w: 1280px;
+  --slide-h: 720px;
+
+  /* Deep ocean base */
+  --bg-primary: #080c14;
+  --bg-secondary: #0e1420;
+  --bg-card: rgba(12,20,32,0.75);
+  --bg-card-solid: #0f1724;
+  --bg-card-hover: #141e2e;
+
+  /* Borders — subtle */
+  --border: rgba(100,130,170,0.12);
+  --border-accent: rgba(100,180,200,0.25);
+
+  /* Text — warm whites */
+  --text-primary: #e8ecf2;
+  --text-secondary: #8e9bb3;
+  --text-muted: #5a6882;
+
+  /* Accent palette — restrained, vivid when used */
+  --teal: #2dd4bf;
+  --teal-dim: #0f766e;
+  --blue: #60a5fa;
+  --blue-dim: #1e3a5f;
+  --coral: #f87171;
+  --coral-dim: #7f1d1d;
+  --amber: #fbbf24;
+  --amber-dim: #78350f;
+  --green: #4ade80;
+  --green-dim: #14532d;
+  --cyan: #22d3ee;
+  --slate: #94a3b8;
+
+  /* Legacy aliases */
+  --red: #f87171;
+  --red-dim: #7f1d1d;
+  --red-bright: #fb923c;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: #000;
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* ============================================================
+   SLIDE FRAME
+   ============================================================ */
+.slide-frame {
+  width: var(--slide-w);
+  height: var(--slide-h);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center center;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.slide {
+  width: var(--slide-w);
+  height: var(--slide-h);
+  padding: 52px 72px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Photo background layer */
+.slide-photo {
+  position: absolute; inset: 0; z-index: 0;
+}
+.slide-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.38) saturate(0.85);
+}
+.slide-overlay {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(8,12,20,0.65) 0%,
+      rgba(8,12,20,0.35) 40%,
+      rgba(8,12,20,0.60) 100%);
+}
+
+/* Subtle texture */
+.slide-texture {
+  position: absolute; inset: 0; z-index: 1;
+  opacity: 0.025;
+  background-image:
+    linear-gradient(rgba(100,180,200,0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,180,200,0.4) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* Legacy grid-bg — very faint */
+.grid-bg {
+  position: absolute; inset: 0; z-index: 1;
+  opacity: 0.02;
+  background-image:
+    linear-gradient(rgba(100,160,200,0.3) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,160,200,0.3) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+}
+
+/* Content elements above backgrounds — exclude bg layers to avoid Safari cascade bug */
+.slide > *:not(.slide-photo):not(.slide-overlay):not(.slide-texture):not(.grid-bg) {
+  position: relative;
+  z-index: 2;
+}
+
+/* Belt-and-suspenders: force bg layers absolute */
+.slide > .slide-photo,
+.slide > .slide-overlay,
+.slide > .slide-texture,
+.slide > .grid-bg {
+  position: absolute !important;
+  inset: 0;
+}
+.slide > .slide-photo  { z-index: 0 !important; }
+.slide > .slide-overlay { z-index: 0 !important; }
+.slide > .slide-texture { z-index: 1 !important; }
+.slide > .grid-bg       { z-index: 1 !important; }
+
+/* Accent line */
+.scanline {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 10%, rgba(45,212,191,0.35) 50%, transparent 90%);
+  opacity: 0.4;
+  z-index: 10;
+}
+.scanline-red {
+  background: linear-gradient(90deg, transparent 10%, rgba(248,113,113,0.35) 50%, transparent 90%);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.slide-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--teal);
+  opacity: 0.6;
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+
+h1 {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 12px;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 780px;
+  font-weight: 300;
+}
+
+.body-text {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.small-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.text-red { color: var(--coral); }
+.text-blue { color: var(--blue); }
+.text-green { color: var(--green); }
+.text-amber { color: var(--amber); }
+.text-cyan { color: var(--cyan); }
+.text-teal { color: var(--teal); }
+
+/* ============================================================
+   CARDS — glass-like, softer
+   ============================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px;
+  backdrop-filter: blur(8px);
+}
+
+.card-accent { border-left: 2px solid var(--teal); }
+.card-red    { border-left: 2px solid var(--coral); }
+.card-green  { border-left: 2px solid var(--green); }
+
+/* ============================================================
+   GRIDS
+   ============================================================ */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+
+/* ============================================================
+   TABLE
+   ============================================================ */
+.intel-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.intel-table th {
+  background: rgba(12,20,32,0.6);
+  padding: 10px 14px;
+  text-align: left;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+}
+
+.intel-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(100,130,170,0.06);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+
+.intel-table tr:hover td {
+  background: rgba(45,212,191,0.03);
+}
+
+/* ============================================================
+   BADGES
+   ============================================================ */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.badge-red   { background: rgba(248,113,113,0.1); color: var(--coral); border: 1px solid rgba(248,113,113,0.2); }
+.badge-amber { background: rgba(251,191,36,0.1);  color: var(--amber); border: 1px solid rgba(251,191,36,0.2); }
+.badge-green { background: rgba(74,222,128,0.1);  color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+.badge-blue  { background: rgba(96,165,250,0.1);  color: var(--blue);  border: 1px solid rgba(96,165,250,0.2); }
+
+/* ============================================================
+   LISTS
+   ============================================================ */
+.op-list { list-style: none; padding: 0; }
+
+.op-list li {
+  padding: 5px 0 5px 16px;
+  position: relative;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.op-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 12px;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--teal);
+  opacity: 0.5;
+}
+
+.not-list li::before {
+  content: '×';
+  width: auto; height: auto;
+  border-radius: 0;
+  background: none;
+  color: var(--coral);
+  font-weight: 600;
+  font-size: 12px;
+  top: 5px;
+  opacity: 1;
+}
+
+/* ============================================================
+   BIG NUMBERS
+   ============================================================ */
+.big-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--teal);
+  line-height: 1;
+}
+
+.metric-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   SECTION HEADERS
+   ============================================================ */
+.section-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* ============================================================
+   PERSON CARDS
+   ============================================================ */
+.person-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  backdrop-filter: blur(8px);
+}
+
+.person-avatar {
+  width: 40px; height: 40px;
+  border-radius: 8px;
+  background: rgba(45,212,191,0.06);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.person-avatar svg {
+  width: 22px; height: 22px;
+  stroke: var(--text-muted);
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.person-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+
+.person-info .role {
+  font-size: 10px;
+  color: var(--teal);
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.person-info .bio { font-size: 12px; color: var(--text-muted); line-height: 1.55; }
+
+/* ============================================================
+   FUNDING BARS
+   ============================================================ */
+.fund-bar {
+  display: flex; align-items: center; gap: 12px; margin: 5px 0;
+}
+.fund-bar-label {
+  font-size: 12px; color: var(--text-secondary);
+  width: 110px; flex-shrink: 0; text-align: right;
+}
+.fund-bar-track {
+  flex: 1; height: 22px;
+  background: rgba(14,20,32,0.6);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.fund-bar-fill {
+  height: 100%; border-radius: 6px;
+  display: flex; align-items: center;
+  padding-left: 10px;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+}
+
+/* ============================================================
+   ASK BOX
+   ============================================================ */
+.ask-box {
+  background: rgba(12,20,32,0.7);
+  border: 1px solid rgba(45,212,191,0.25);
+  border-radius: 16px;
+  padding: 36px;
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.ask-box .big-number {
+  font-size: 72px;
+  color: var(--teal);
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* ============================================================
+   FLEX HELPERS
+   ============================================================ */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-1 { flex: 1; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.text-center { text-align: center; }
+.gap-4  { gap: 4px; }
+.gap-8  { gap: 8px; }
+.gap-10 { gap: 10px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.gap-20 { gap: 20px; }
+.gap-24 { gap: 24px; }
+.mb-4   { margin-bottom: 4px; }
+.mb-8   { margin-bottom: 8px; }
+.mb-12  { margin-bottom: 12px; }
+.mb-16  { margin-bottom: 16px; }
+.mb-20  { margin-bottom: 20px; }
+.mb-24  { margin-bottom: 24px; }
+.mt-auto { margin-top: auto; }
+
+/* ============================================================
+   SLIDE VARIANTS
+   ============================================================ */
+.slide--full { padding: 0; overflow: hidden; }
+.slide--centered { justify-content: center; align-items: center; text-align: center; }
+
+.slide-content {
+  position: relative;
+  z-index: 10;
+  padding: 52px 72px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.slide-content--tight { padding-top: 48px; padding-bottom: 48px; }
+.slide-content--title { padding-top: 56px; }
+
+/* Top accent line */
+.top-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+  opacity: 0.3;
+  z-index: 20;
+}
+.top-accent--coral {
+  background: linear-gradient(90deg, transparent, var(--coral), transparent);
+}
+
+/* Scanline color variant */
+.scanline--coral {
+  background: linear-gradient(90deg, transparent 10%, rgba(248,113,113,0.25) 50%, transparent 90%);
+}
+
+/* ============================================================
+   BORDER-LEFT COLOR UTILITIES
+   ============================================================ */
+.bl-teal  { border-left: 2px solid var(--teal); }
+.bl-coral { border-left: 2px solid var(--coral); }
+.bl-green { border-left: 2px solid var(--green); }
+.bl-amber { border-left: 2px solid var(--amber); }
+.bl-blue  { border-left: 2px solid var(--blue); }
+.bl-muted { border-left: 2px solid var(--text-muted); }
+
+/* ============================================================
+   FONT SIZE UTILITIES
+   ============================================================ */
+.fs-12 { font-size: 12px; }
+.fs-13 { font-size: 13px; }
+.fs-14 { font-size: 14px; }
+.fs-15 { font-size: 15px; }
+.fs-16 { font-size: 16px; }
+.fs-17 { font-size: 17px; }
+.fs-20 { font-size: 20px; }
+.fs-22 { font-size: 22px; }
+
+/* ============================================================
+   FONT WEIGHT UTILITIES
+   ============================================================ */
+.fw-light    { font-weight: 300; }
+.fw-normal   { font-weight: 400; }
+.fw-medium   { font-weight: 500; }
+.fw-semibold { font-weight: 600; }
+.fw-bold     { font-weight: 700; }
+
+/* ============================================================
+   ADDITIONAL SPACING
+   ============================================================ */
+.mt-3   { margin-top: 3px; }
+.mt-4   { margin-top: 4px; }
+.mt-8   { margin-top: 8px; }
+.mt-10  { margin-top: 10px; }
+.mt-12  { margin-top: 12px; }
+.mt-16  { margin-top: 16px; }
+.mt-36  { margin-top: 36px; }
+.mb-2   { margin-bottom: 2px; }
+.mb-6   { margin-bottom: 6px; }
+.mb-14  { margin-bottom: 14px; }
+.mb-48  { margin-bottom: 48px; }
+.mb-70  { margin-bottom: 70px; }
+.gap-14 { gap: 14px; }
+.m-0    { margin: 0; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+/* Max-widths */
+.mw-340  { max-width: 340px; }
+.mw-480  { max-width: 480px; }
+.mw-540  { max-width: 540px; }
+.mw-620  { max-width: 620px; }
+.mw-680  { max-width: 680px; }
+.mw-780  { max-width: 780px; }
+
+/* ============================================================
+   COMPONENT VARIANTS
+   ============================================================ */
+/* Big number sizes */
+.big-number--sm { font-size: 36px; }
+.big-number--md { font-size: 40px; }
+.big-number--lg { font-size: 56px; }
+
+/* Big number colors */
+.big-number--coral { color: var(--coral); }
+.big-number--green { color: var(--green); }
+.big-number--amber { color: var(--amber); }
+
+/* Stat card (title slide) */
+.stat-card {
+  background: rgba(8,12,20,0.7);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 24px;
+  backdrop-filter: blur(8px);
+}
+.stat-card--coral { border-color: rgba(248,113,113,0.15); }
+.stat-card--amber { border-color: rgba(251,191,36,0.15); }
+
+/* Fund amount (mono dollar figures) */
+.fund-amount {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Card variants */
+.card--callout { text-align: center; }
+.card--callout-teal {
+  background: rgba(45,212,191,0.04);
+  border-color: rgba(45,212,191,0.2);
+}
+.card--callout-coral {
+  background: rgba(248,113,113,0.04);
+  border-color: rgba(248,113,113,0.15);
+}
+.card--danger {
+  border-left: 2px solid var(--coral);
+  background: rgba(20,10,12,0.75);
+}
+.card--compact { padding: 10px 14px; }
+
+/* Section label colors */
+.section-label--teal  { color: var(--teal); }
+.section-label--amber { color: var(--amber); }
+.section-label--muted { color: var(--text-muted); }
+
+/* Slide label color variant */
+.slide-label--coral { color: var(--coral); }
+
+/* Person card with teal accent */
+.person-card--primary { border-color: rgba(45,212,191,0.15); }
+.person-avatar--primary {
+  background: rgba(45,212,191,0.08);
+  border-color: rgba(45,212,191,0.2);
+}
+
+/* Role color variant */
+.role--amber { color: var(--amber); }
+
+/* Subtle text in primary color */
+strong.text-primary, .text-primary { color: var(--text-primary); }
+.text-coral { color: var(--coral); }
+
+/* Flex fill (flex:1) */
+.flex-fill { flex: 1; }
+
+/* ============================================================
+   NAV BAR
+   ============================================================ */
+.nav-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 44px;
+  background: rgba(8,12,20,0.95);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  z-index: 1000;
+  backdrop-filter: blur(16px);
+}
+
+.nav-bar button {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.nav-bar button:hover {
+  color: var(--text-primary);
+  border-color: var(--teal);
+  background: rgba(45,212,191,0.05);
+}
+
+.slide-counter {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+}
+
+.progress-track {
+  position: fixed;
+  bottom: 44px; left: 0; right: 0;
+  height: 1px;
+  background: rgba(14,20,32,0.8);
+  z-index: 1000;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--blue));
+  transition: width 0.35s ease;
+}
+
+.dot-nav { display: flex; gap: 6px; align-items: center; }
+
+.dot-nav .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(100,130,170,0.2);
+  cursor: pointer;
+  transition: all 0.25s;
+  border: none; padding: 0;
+}
+
+.dot-nav .dot.active {
+  background: var(--teal);
+  box-shadow: 0 0 10px rgba(45,212,191,0.4);
+  width: 8px; height: 8px;
+}
+
+.dot-nav .dot:hover { background: var(--text-muted); }
+
+/* ============================================================
+   PRINT / PDF EXPORT STYLESHEET
+   Safari-compatible 1280×720 slide export.
+   ============================================================ */
+
+@page {
+  size: 1280px 720px;
+  margin: 0;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: #080c14 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    width: 1280px !important;
+    height: auto !important;
+  }
+
+  /* Hide all nav/chrome */
+  .nav-bar,
+  .progress-track,
+  .dot-nav,
+  #exportBtn {
+    display: none !important;
+  }
+
+  /* Deck container: block flow */
+  #deck {
+    display: block !important;
+    width: 1280px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Each slide-frame = one printed page */
+  .slide-frame {
+    display: block !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    width: 1280px !important;
+    height: 720px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    page-break-after: always !important;
+    -webkit-column-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .slide-frame:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .slide {
+    display: flex !important;
+    opacity: 1 !important;
+    width: 1280px !important;
+    height: 720px !important;
+  }
+
+  /* Background layers */
+  .slide-photo,
+  .slide-overlay,
+  .slide-texture,
+  .grid-bg {
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  .slide-photo img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    filter: brightness(0.38) saturate(0.85) !important;
+  }
+
+  /* Kill all animations */
+  *, *::before, *::after {
+    animation: none !important;
+    -webkit-animation: none !important;
+    transition: none !important;
+  }
+
+  svg animateTransform,
+  svg animate {
+    display: none !important;
+  }
+
+  /* Backdrop filter doesn't work in print — solid fallback */
+  .card,
+  .person-card,
+  .ask-box,
+  .stat-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="deck">
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1551244072-5d12893278ab?w=1400&q=80" alt=""
+           style="object-position:center 60%; filter:brightness(0.45) saturate(1.1);">
+    </div>
+    <div class="slide-overlay" style="background:
+      radial-gradient(ellipse at 70% 30%, rgba(45,212,191,0.06) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(8,12,20,0.75) 0%, rgba(8,12,20,0.4) 40%, rgba(8,12,20,0.85) 100%);"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content slide-content--title">
+      <div class="slide-label" style="opacity:0.5;">Confidential Briefing // March 2026</div>
+      <h1>Climate Intervention<br>Operations Center</h1>
+      <div class="subtitle fs-20 fw-light mb-48 mw-620" style="line-height:1.55;">
+        Air traffic control for climate intervention.<br>Not another nonprofit. An operations function.
+      </div>
+
+      <div class="mt-auto mb-24">
+        <div class="flex gap-24">
+          <div class="stat-card">
+            <div class="metric-label">Field Size</div>
+            <div class="big-number big-number--sm">~500</div>
+            <div class="small-text">practitioners worldwide</div>
+          </div>
+          <div class="stat-card stat-card--coral">
+            <div class="metric-label">Coordination Layer</div>
+            <div class="big-number big-number--sm big-number--coral">0</div>
+            <div class="small-text">operational entities</div>
+          </div>
+          <div class="stat-card stat-card--amber">
+            <div class="metric-label">Critical Windows</div>
+            <div class="big-number big-number--sm big-number--amber">4</div>
+            <div class="small-text">closing in 6–12 months</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-accent"></div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1546500840-ae38253aba9b?w=1400&q=80" alt=""
+           style="filter:brightness(0.35) saturate(0.8);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">01 // Problem Statement</div>
+      <h2>The Problem Isn't Knowledge. <span class="text-coral">It's Coordination.</span></h2>
+      <div class="subtitle mb-20 fs-16">~500 practitioners. Dozens of funders. Zero operational coordination.</div>
+
+      <div class="grid-2 gap-16 flex-fill">
+        <div class="flex flex-col gap-14">
+          <div class="card bl-coral">
+            <div class="big-number big-number--lg mb-6">0</div>
+            <div class="body-text">Entities whose job is matching live funding to live needs in real time</div>
+          </div>
+          <div class="card">
+            <h3 class="fs-16">Funders Seeking Deployment</h3>
+            <div class="body-text">Spitzer, Navigation Fund, CEF — have capital, can't find legible projects</div>
+          </div>
+          <div class="card">
+            <h3 class="fs-16">Practitioners Isolated</h3>
+            <div class="body-text">Daniel (coral MCB), Lea (Arctic), Luke (rewilding), Pall (Iceland) — underfunded, disconnected from each other</div>
+          </div>
+        </div>
+        <div class="flex flex-col gap-14">
+          <div class="card">
+            <h3 class="fs-16">Political Windows Untracked</h3>
+            <div class="body-text">Hill offices moving on intervention, no one systematically monitoring or matching technical depth to political moments</div>
+          </div>
+          <div class="card">
+            <h3 class="fs-16">Audience Intelligence Unused</h3>
+            <div class="body-text">Four years of research on what messages move which audiences — no channel to practitioners who need it</div>
+          </div>
+          <div class="card bl-teal card--callout-teal">
+            <div class="fs-15 fw-semibold">Every piece exists. <span class="text-teal">No one is holding the board.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&q=80" alt=""
+           style="filter:brightness(0.35) saturate(0.8); object-position:center 70%;">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">02 // Root Cause</div>
+      <h2>Why This Is Happening</h2>
+      <div class="subtitle mb-24 fw-light">Not because people don't care. Not because the science isn't ready. Not because the money doesn't exist.</div>
+
+      <div class="grid-2 gap-16 flex-fill">
+        <div class="card card-accent">
+          <div class="flex items-center gap-8 mb-8"><span class="badge badge-green">FUNDERS</span></div>
+          <h3 class="fs-16">Spitzer & Navigation Fund</h3>
+          <div class="body-text">Actively seek deployment opportunities but <strong class="text-amber">can't find legible projects</strong>. Capital exists. Deal flow doesn't.</div>
+        </div>
+
+        <div class="card card-accent">
+          <div class="flex items-center gap-8 mb-8"><span class="badge badge-blue">PRACTITIONERS</span></div>
+          <h3 class="fs-16">Daniel, Lea, Luke, Pall</h3>
+          <div class="body-text">Running coral MCB, bubble tech, Arctic rewilding, Iceland experiments — <strong class="text-amber">underfunded and isolated</strong> from each other.</div>
+        </div>
+
+        <div class="card card-accent">
+          <div class="flex items-center gap-8 mb-8"><span class="badge badge-amber">ADVOCACY</span></div>
+          <h3 class="fs-16">CCAN & Hill Advocates</h3>
+          <div class="body-text">Working the Hill <strong class="text-amber">without technical depth</strong> of what they're fighting for.</div>
+        </div>
+
+        <div class="card card-accent">
+          <div class="flex items-center gap-8 mb-8"><span class="badge badge-red">COMMS</span></div>
+          <h3 class="fs-16">Audience Researchers</h3>
+          <div class="body-text">Have the intelligence — which messages move which audiences — but <strong class="text-amber">no channel to practitioners</strong> who need it.</div>
+        </div>
+      </div>
+
+      <div class="card card--callout card--callout-teal mt-16">
+        <div class="fs-17 fw-medium">
+          The field has an <span class="text-coral">operations gap</span>, not a knowledge gap.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.7);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">03 // Field Assessment</div>
+      <h2>What Exists Today <span class="fw-light text-muted">& What It Can't Do</span></h2>
+
+      <table class="intel-table mt-12">
+        <thead>
+          <tr>
+            <th style="width:140px;">Entity</th>
+            <th>What It Does</th>
+            <th>What It Can't Do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong class="text-primary">Ocean Visions</strong></td>
+            <td>Ocean tech assessment, 450-person network across 25 countries</td>
+            <td><span class="text-red">Move funding, work outside oceans, political strategy</span></td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">Climate Hub</strong></td>
+            <td>Behind-the-scenes government engagement</td>
+            <td><span class="text-red">Public narrative, practitioner coordination, funder triage</span></td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">CCAN</strong></td>
+            <td>Hill advocacy, tracks Big Four environmental orgs</td>
+            <td><span class="text-red">Technical depth, global picture, foundation relationships</span></td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">CEF / Renphil</strong></td>
+            <td>Grantmaking, information sharing</td>
+            <td><span class="text-red">Real-time coordination, live triage, systematic strategy</span></td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">ACER</strong></td>
+            <td>Arctic intervention research coordination</td>
+            <td><span class="text-red">Single intervention focus, 5–7 year timeline</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card--callout card--callout-coral mt-auto">
+        <div class="fs-15">
+          Everyone operates in lanes. <strong class="text-red">No one has the mandate to match resources to moments in real time.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&q=80" alt=""
+           style="filter:brightness(0.35) saturate(0.8);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">04 // Operations Architecture</div>
+      <h2>What the Operations Center Does</h2>
+      <div class="subtitle mb-16 fs-15">Four functions. One team. One operational picture.</div>
+
+      <div class="grid-2 gap-16 flex-fill">
+        <div class="card bl-teal">
+          <div class="flex items-center gap-8 mb-8">
+            <span class="badge badge-blue">01</span>
+            <h3 class="m-0 fs-15">Live Field Intelligence</h3>
+          </div>
+          <ul class="op-list">
+            <li>Continuously updated map of every intervention project, funding status, timeline, critical needs</li>
+            <li>Flags when Daniel's MCB has 12 months left, when Pall needs one hire, when ACER RFPs go live</li>
+            <li>Track political windows: which offices are moving, which countries creating permission space</li>
+          </ul>
+        </div>
+
+        <div class="card bl-green">
+          <div class="flex items-center gap-8 mb-8">
+            <span class="badge badge-green">02</span>
+            <h3 class="m-0 fs-15">Funding Triage</h3>
+          </div>
+          <ul class="op-list">
+            <li>Match specific asks to specific funders with specific deadlines</li>
+            <li>Ian Philp wants viable projects separated from speculation — deliver the shortlist</li>
+            <li>Liam has capital, cites talent shortage — introduce him to Luke, Lea, and Pall</li>
+            <li><strong class="text-primary">Not grantmaking. Brokering.</strong></li>
+          </ul>
+        </div>
+
+        <div class="card bl-amber">
+          <div class="flex items-center gap-8 mb-8">
+            <span class="badge badge-amber">03</span>
+            <h3 class="m-0 fs-15">Institutional Influence</h3>
+          </div>
+          <ul class="op-list">
+            <li>Systematic strategy on Big Four environmental orgs using CCAN's existing scorecard</li>
+            <li>Identify specific board members, trusted voices, asks small enough to get initial yes</li>
+            <li>EDF moved, NRDC has technical staff engaged, Sierra Club needs years</li>
+          </ul>
+        </div>
+
+        <div class="card bl-coral">
+          <div class="flex items-center gap-8 mb-8">
+            <span class="badge badge-red">04</span>
+            <h3 class="m-0 fs-15">Targeted Public Operations</h3>
+          </div>
+          <ul class="op-list">
+            <li>Deploy Elysha's four years of audience research through actual messengers and channels</li>
+            <li>Coral messaging for Hill staffers → specific creators with measurable reach</li>
+            <li>AMOC/Arctic security framing where it resonates (Nordic audiences)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1494783367193-149034c05e8f?w=1400&q=80" alt=""
+           style="filter:brightness(0.35) saturate(0.8); object-position:center 40%;">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">05 // Operational Boundaries</div>
+      <h2>What the Operations Center <span class="text-red">Does Not</span> Do</h2>
+      <div class="subtitle mb-20 fs-15">Mission creep kills coordination functions. Clear boundaries maintain effectiveness.</div>
+
+      <div class="grid-2 gap-20 flex-fill">
+        <div class="flex flex-col gap-16">
+          <div class="card bl-coral">
+            <ul class="op-list not-list">
+              <li><strong class="text-primary">Does not make grants.</strong> Brokers connections. CEF/Renphil remain grantmaking entities.</li>
+              <li><strong class="text-primary">Does not conduct research.</strong> ACER, Ocean Visions, practitioners do the science.</li>
+              <li><strong class="text-primary">Does not lobby directly.</strong> CCAN and Climate Hub own Hill relationships.</li>
+              <li><strong class="text-primary">Does not deploy interventions.</strong> Practitioners deploy. This function ensures they're funded and coordinated.</li>
+              <li><strong class="text-primary">Does not publish reports.</strong> Every output is operational — specific introduction, funding match, media placement.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-col justify-center items-center">
+          <svg viewBox="0 0 360 300" class="mw-340" style="width:100%;">
+            <defs>
+              <radialGradient id="radar" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.12"/>
+                <stop offset="100%" stop-color="#2dd4bf" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="180" cy="150" r="120" fill="url(#radar)"/>
+            <circle cx="180" cy="150" r="120" fill="none" stroke="#2dd4bf" stroke-width="0.5" opacity="0.2"/>
+            <circle cx="180" cy="150" r="80" fill="none" stroke="#2dd4bf" stroke-width="0.5" opacity="0.12"/>
+            <circle cx="180" cy="150" r="40" fill="none" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+            <line x1="180" y1="25" x2="180" y2="275" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+            <line x1="55" y1="150" x2="305" y2="150" stroke="#2dd4bf" stroke-width="0.5" opacity="0.08"/>
+            <line x1="180" y1="150" x2="280" y2="80" stroke="#2dd4bf" stroke-width="1" opacity="0.35">
+              <animateTransform attributeName="transform" type="rotate" from="0 180 150" to="360 180 150" dur="8s" repeatCount="indefinite"/>
+            </line>
+            <circle cx="140" cy="90" r="3.5" fill="#4ade80" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2s" repeatCount="indefinite"/></circle>
+            <circle cx="230" cy="110" r="3.5" fill="#4ade80" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.5s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="200" r="3.5" fill="#fbbf24" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.8s" repeatCount="indefinite"/></circle>
+            <circle cx="120" cy="180" r="3.5" fill="#f87171" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="1.5s" repeatCount="indefinite"/></circle>
+            <circle cx="250" cy="170" r="3.5" fill="#4ade80" opacity="0.7"><animate attributeName="opacity" values="0.7;0.3;0.7" dur="2.2s" repeatCount="indefinite"/></circle>
+            <circle cx="180" cy="150" r="5" fill="#2dd4bf"/>
+            <text x="180" y="290" text-anchor="middle" fill="#8e9bb3" font-size="13" font-family="Inter, sans-serif" font-weight="500">Air traffic control, not an airline.</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.7);">
+    </div>
+    <div class="slide-overlay" style="background:
+      linear-gradient(180deg, rgba(8,12,20,0.88) 0%, rgba(8,12,20,0.5) 35%, rgba(8,12,20,0.85) 100%);"></div>
+    <div class="slide-texture"></div>
+
+    <!-- Timeline bar (SVG positioned absolutely) -->
+    <svg style="position:absolute;bottom:60px;left:72px;right:72px;height:100px;z-index:3;" viewBox="0 0 1136 100" preserveAspectRatio="xMidYMid meet">
+      <!-- MCB deadline span (full width, top row) -->
+      <rect x="0" y="0" width="1136" height="20" rx="4" fill="none" stroke="rgba(248,113,113,0.18)" stroke-dasharray="4 4"/>
+      <text x="1090" y="14" text-anchor="end" fill="var(--coral)" font-size="8" font-family="IBM Plex Mono, monospace" opacity="0.7">MCB 12-MO DEADLINE</text>
+
+      <!-- Iceland span (0–6 months, second row) -->
+      <rect x="0" y="26" width="474" height="20" rx="4" fill="rgba(251,191,36,0.06)" stroke="rgba(251,191,36,0.18)"/>
+      <text x="237" y="40" text-anchor="middle" fill="var(--amber)" font-size="8" font-family="IBM Plex Mono, monospace" opacity="0.8">ICELAND 3–6 MO</text>
+
+      <!-- ACER (1–2 months, third row) -->
+      <rect x="95" y="52" width="95" height="20" rx="4" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.25)"/>
+      <text x="142" y="66" text-anchor="middle" fill="var(--amber)" font-size="8" font-family="IBM Plex Mono, monospace">ACER</text>
+
+      <!-- CCAN Summer (5–7 months, third row) -->
+      <rect x="474" y="52" width="189" height="20" rx="4" fill="rgba(96,165,250,0.1)" stroke="rgba(96,165,250,0.25)"/>
+      <text x="568" y="66" text-anchor="middle" fill="var(--blue)" font-size="8" font-family="IBM Plex Mono, monospace">CCAN SUMMER</text>
+
+      <!-- Axis line -->
+      <line x1="0" y1="80" x2="1136" y2="80" stroke="rgba(100,130,170,0.18)" stroke-width="1"/>
+
+      <!-- Tick marks and labels -->
+      <g fill="var(--text-muted)" font-size="9" font-family="IBM Plex Mono, monospace" text-anchor="middle">
+        <line x1="0" y1="76" x2="0" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="8" y="96" text-anchor="start">NOW</text>
+        <line x1="189" y1="76" x2="189" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="189" y="96">2 MO</text>
+        <line x1="379" y1="76" x2="379" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="379" y="96">4 MO</text>
+        <line x1="568" y1="76" x2="568" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="568" y="96">6 MO</text>
+        <line x1="757" y1="76" x2="757" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="757" y="96">8 MO</text>
+        <line x1="947" y1="76" x2="947" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="947" y="96">10 MO</text>
+        <line x1="1136" y1="76" x2="1136" y2="84" stroke="rgba(100,130,170,0.25)"/><text x="1128" y="96" text-anchor="end">12</text>
+      </g>
+    </svg>
+
+    <div class="slide-content">
+      <div class="scanline scanline--coral"></div>
+      <div class="slide-label slide-label--coral">06 // Critical Timeline</div>
+      <h2>The Immediate Window</h2>
+      <div class="subtitle mb-16 fs-15">Four convergent opportunities in the next six months.</div>
+
+      <table class="intel-table">
+        <thead><tr><th>Opportunity</th><th>Deadline</th><th>Status</th><th>Risk Without Coordination</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong class="text-primary">Daniel's MCB Funding</strong></td>
+            <td><span class="text-red fw-semibold">12 months max</span></td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>World's most advanced coral cooling tech gets defunded</td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">ACER Public Launch</strong></td>
+            <td><span class="text-amber fw-semibold">April 2026</span></td>
+            <td><span class="badge badge-amber">Urgent</span></td>
+            <td>Arctic research coordination launches without adequate resources</td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">Iceland Social License</strong></td>
+            <td><span class="text-amber fw-semibold">3–6 months</span></td>
+            <td><span class="badge badge-amber">Urgent</span></td>
+            <td>First country ready for outdoor experiments lacks implementation readiness</td>
+          </tr>
+          <tr>
+            <td><strong class="text-primary">CCAN Summer Convening</strong></td>
+            <td><span class="text-muted">Summer 2026</span></td>
+            <td><span class="badge badge-blue">Active</span></td>
+            <td>Big Four environmental orgs continue 5+ year decision timelines</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card bl-coral card--callout mt-auto" style="margin-bottom:110px;">
+        <div class="fs-15">
+          <strong class="text-primary">Coordination function operational today affects all four.</strong>
+          <span class="text-red"> In 12 months, critical windows close permanently.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.7);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content slide-content--tight">
+      <div class="scanline"></div>
+      <div class="slide-label">07 // Team Architecture</div>
+      <h2>The Team</h2>
+      <div class="subtitle mb-14 fs-15">Two co-founders. Two strategic hires. Advisory support.</div>
+
+      <div class="section-label section-label--teal">CO-FOUNDERS</div>
+      <div class="grid-2 gap-14 mb-14">
+        <div class="person-card person-card--primary">
+          <div class="person-avatar person-avatar--primary">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+          </div>
+          <div class="person-info">
+            <h4>Paul Gambill</h4>
+            <div class="role">Global Networks & Field Intelligence</div>
+            <div class="bio">Founded/ran Nori for 7 years, scaled complex stakeholder management. 18 months of intervention field relationships.</div>
+          </div>
+        </div>
+        <div class="person-card person-card--primary">
+          <div class="person-avatar person-avatar--primary">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+          </div>
+          <div class="person-info">
+            <h4>Ben Lachman</h4>
+            <div class="role">Operations & Resource Coordination</div>
+            <div class="bio">15+ years building products, coached 30+ startups through fundraising. VC networks and systems thinking.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label section-label--amber">STRATEGIC HIRES</div>
+      <div class="grid-2 gap-14 mb-14">
+        <div class="person-card">
+          <div class="person-avatar">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div class="person-info">
+            <h4>Big Four Institutional Strategist</h4>
+            <div class="role role--amber">Strategic Hire</div>
+            <div class="bio">Campaign manager or corporate affairs director. Multi-year influence operations on large organizations.</div>
+          </div>
+        </div>
+        <div class="person-card">
+          <div class="person-avatar">
+            <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div class="person-info">
+            <h4>Content Strategy Lead</h4>
+            <div class="role role--amber">Strategic Hire</div>
+            <div class="bio">Performance marketing or creator economy operator. Audience segmentation, placement, measurement at scale.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-label section-label--muted">ADVISORS</div>
+      <div class="flex gap-14">
+        <div class="card card--compact flex-fill">
+          <div class="small-text"><strong class="text-primary">Ian Philp</strong> (Spitzer) — Foundation relations</div>
+        </div>
+        <div class="card card--compact flex-fill">
+          <div class="small-text"><strong class="text-primary">Andrew Cantino</strong> — Resource allocation</div>
+        </div>
+        <div class="card card--compact flex-fill">
+          <div class="small-text"><strong class="text-primary">Technical Advisors</strong> — Practitioner network</div>
+        </div>
+      </div>
+
+      <div class="card card--callout card--callout-teal card--compact mt-10">
+        <div class="fs-14 fw-semibold">Hire operators, teach them climate.</div>
+        <div class="small-text mt-3">4 FTEs + advisors. <span class="text-teal fw-bold">$1.2M Year 1.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1484291470158-b8f8d608850d?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.7);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">08 // Financial Architecture</div>
+      <h2>Funding Model</h2>
+
+      <div class="grid-2 gap-24 flex-fill">
+        <div class="flex flex-col gap-16">
+          <div>
+            <div class="flex items-center gap-12 mb-12">
+              <div class="big-number big-number--md">$1.2M</div>
+              <div class="fs-14 text-muted">Year 1 Budget</div>
+            </div>
+            <div class="card mb-12">
+              <div class="section-label section-label--muted mb-10">ALLOCATION</div>
+              <div class="fund-bar">
+                <div class="fund-bar-label">FTEs</div>
+                <div class="fund-bar-track">
+                  <div class="fund-bar-fill" style="width:66.7%; background:linear-gradient(90deg, #0f766e, #2dd4bf);">$800K</div>
+                </div>
+              </div>
+              <div class="fund-bar">
+                <div class="fund-bar-label">Operations</div>
+                <div class="fund-bar-track">
+                  <div class="fund-bar-fill" style="width:16.7%; background:linear-gradient(90deg, #14532d, #4ade80);">$200K</div>
+                </div>
+              </div>
+              <div class="fund-bar">
+                <div class="fund-bar-label">Advisory/Legal</div>
+                <div class="fund-bar-track">
+                  <div class="fund-bar-fill" style="width:8.3%; background:linear-gradient(90deg, #78350f, #fbbf24);">$100K</div>
+                </div>
+              </div>
+              <div class="fund-bar">
+                <div class="fund-bar-label">Content</div>
+                <div class="fund-bar-track">
+                  <div class="fund-bar-fill" style="width:8.3%; background:linear-gradient(90deg, #7f1d1d, #f87171);">$100K</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card bl-teal">
+            <h3 class="fs-14">Structure: Independent Nonprofit</h3>
+            <ul class="op-list fs-12">
+              <li>Not housed within existing organization</li>
+              <li>Avoids institutional constraints and mission drift</li>
+              <li>Can spin out profitable tools/services Year 2–3</li>
+              <li>Maintains credibility with practitioners</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-14">
+          <div class="section-label section-label--muted">FUNDING SOURCES</div>
+          <div class="card bl-green">
+            <div class="flex justify-between items-center">
+              <div><h3 class="fs-14 mb-2">CEF / Renphil</h3><div class="small-text">Anchor funding</div></div>
+              <div class="fund-amount text-green">$400K</div>
+            </div>
+          </div>
+          <div class="card bl-blue">
+            <div class="flex justify-between items-center">
+              <div><h3 class="fs-14 mb-2">Navigation Fund</h3><div class="small-text">Has money, seeks deployment opportunities</div></div>
+              <div class="fund-amount text-blue">$300K</div>
+            </div>
+          </div>
+          <div class="card bl-amber">
+            <div class="flex justify-between items-center">
+              <div><h3 class="fs-14 mb-2">Spitzer</h3><div class="small-text">Field-building focus, foundation relations access</div></div>
+              <div class="fund-amount text-amber">$300K</div>
+            </div>
+          </div>
+          <div class="card bl-muted">
+            <div class="flex justify-between items-center">
+              <div><h3 class="fs-14 mb-2">Outlier / Others</h3><div class="small-text">Based on demonstrated early wins</div></div>
+              <div class="fund-amount text-muted">$200K</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.7);">
+    </div>
+    <div class="slide-overlay"></div>
+    <div class="slide-texture"></div>
+
+    <div class="slide-content">
+      <div class="scanline"></div>
+      <div class="slide-label">09 // Performance Targets</div>
+      <h2>Success Metrics <span class="fw-light text-muted">Year 1</span></h2>
+      <div class="subtitle mb-16 fs-14">Operational outcomes, not process metrics.</div>
+
+      <div class="grid-3 gap-14 flex-fill">
+        <div class="card bl-coral">
+          <div class="metric-label">Critical Windows</div>
+          <h3 class="fs-14 mt-8">Caught & Acted On</h3>
+          <ul class="op-list fs-12">
+            <li>Daniel's MCB work funded</li>
+            <li>Iceland social license converts to experiments</li>
+            <li>ACER launch adequately resourced</li>
+          </ul>
+        </div>
+
+        <div class="card bl-green">
+          <div class="metric-label">Funding Brokered</div>
+          <div class="big-number big-number--sm big-number--green mt-8">$5M+</div>
+          <div class="body-text fs-12 mt-4">Directly matched between funders and practitioners through triage</div>
+        </div>
+
+        <div class="card bl-amber">
+          <div class="metric-label">Big Four Movement</div>
+          <h3 class="fs-14 mt-8">≥1 Org Shifts</h3>
+          <div class="body-text fs-12 mt-4">From no-position to working group or public statement on climate intervention</div>
+        </div>
+
+        <div class="card bl-teal">
+          <div class="metric-label">Practitioner Coordination</div>
+          <h3 class="fs-14 mt-8">New Collaborations</h3>
+          <div class="body-text fs-12 mt-4">Measurable collaborations between previously unconnected researchers</div>
+        </div>
+
+        <div class="card bl-blue">
+          <div class="metric-label">Content Performance</div>
+          <h3 class="fs-14 mt-8">Targeted Reach</h3>
+          <div class="body-text fs-12 mt-4">Specific audiences reached with engagement measured and iterated</div>
+        </div>
+
+        <div class="card card--callout-teal" style="border-style:dashed;">
+          <div class="metric-label">Year 2 Unlock</div>
+          <h3 class="fs-14 mt-8 text-muted">Spin-Out Potential</h3>
+          <div class="body-text fs-12 mt-4 text-muted">Coordination tools → SaaS. Field intelligence → consulting revenue.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1583212292454-1fe6229603b7?w=1400&q=80" alt=""
+           style="filter:brightness(0.30) saturate(0.6);">
+    </div>
+    <div class="slide-overlay" style="background:
+      radial-gradient(ellipse at 50% 50%, rgba(248,113,113,0.05) 0%, transparent 60%),
+      linear-gradient(180deg, rgba(12,6,8,0.9) 0%, rgba(12,6,8,0.6) 40%, rgba(12,6,8,0.9) 100%);"></div>
+    <div class="slide-texture" style="opacity:0.015;"></div>
+
+    <div class="slide-content">
+      <div class="scanline scanline--coral"></div>
+      <div class="slide-label slide-label--coral">10 // Default Trajectory</div>
+      <h2>What Happens <span class="text-red">Without</span> This</h2>
+      <div class="subtitle mb-16 fs-14">Default trajectory supported by every interview.</div>
+
+      <div class="flex flex-col gap-10 flex-fill">
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">MCB</span>
+            <div class="body-text fs-13">Daniel's coral MCB work gets cut from RRAP budget. <strong class="text-red">Marine cloud brightening for reef protection set back a decade.</strong></div>
+          </div>
+        </div>
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">ACER</span>
+            <div class="body-text fs-13">ACER launches with modest resources, <strong class="text-red">spends years building relationships</strong> that systematic coordination creates in weeks.</div>
+          </div>
+        </div>
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">Iceland</span>
+            <div class="body-text fs-13">Pall operates Iceland strategy solo with WhatsApp group, <strong class="text-red">burns out without institutional support.</strong></div>
+          </div>
+        </div>
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">Arctic</span>
+            <div class="body-text fs-13">Luke continues Arctic rewilding <strong class="text-red">isolated from broader permafrost community</strong> and appropriate-scale funding.</div>
+          </div>
+        </div>
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">Big Four</span>
+            <div class="body-text fs-13">Environmental orgs move at institutional speed: <strong class="text-red">Sierra Club takes 5+ years, NRDC stays technical-only.</strong></div>
+          </div>
+        </div>
+        <div class="card card--danger">
+          <div class="flex gap-12 items-center">
+            <span class="badge badge-red">Cycle</span>
+            <div class="body-text fs-13">Every six months, another coordination report gets published <strong class="text-red">while coordination failures compound.</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide-frame">
+  <div class="slide slide--full slide--centered">
+    <div class="slide-photo">
+      <img crossorigin="anonymous" loading="eager" src="https://images.unsplash.com/photo-1468581264429-2548ef9eb732?w=1400&q=80" alt=""
+           style="filter:brightness(0.35) saturate(0.8);">
+    </div>
+    <div class="slide-overlay" style="background:
+      radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.06) 0%, transparent 50%),
+      linear-gradient(180deg, rgba(6,10,20,0.9) 0%, rgba(6,10,20,0.5) 50%, rgba(6,10,20,0.9) 100%);"></div>
+    <div class="slide-texture"></div>
+
+    <!-- Converging lines SVG -->
+    <svg style="position:absolute;inset:0;z-index:1;opacity:0.08;" viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="ask_glow" cx="50%" cy="50%" r="35%">
+          <stop offset="0%" stop-color="#2dd4bf" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="1280" height="720" fill="url(#ask_glow)"/>
+      <g stroke="#2dd4bf" stroke-width="0.8" opacity="0.35">
+        <line x1="0" y1="100" x2="640" y2="360"/>
+        <line x1="0" y1="400" x2="640" y2="360"/>
+        <line x1="0" y1="650" x2="640" y2="360"/>
+        <line x1="1280" y1="80" x2="640" y2="360"/>
+        <line x1="1280" y1="350" x2="640" y2="360"/>
+        <line x1="1280" y1="620" x2="640" y2="360"/>
+        <line x1="200" y1="0" x2="640" y2="360"/>
+        <line x1="640" y1="0" x2="640" y2="360"/>
+        <line x1="1080" y1="0" x2="640" y2="360"/>
+        <line x1="300" y1="720" x2="640" y2="360"/>
+        <line x1="640" y1="720" x2="640" y2="360"/>
+        <line x1="980" y1="720" x2="640" y2="360"/>
+      </g>
+      <g fill="#2dd4bf" opacity="0.3">
+        <circle cx="0" cy="100" r="2.5"/><circle cx="0" cy="400" r="2.5"/><circle cx="0" cy="650" r="2.5"/>
+        <circle cx="1280" cy="80" r="2.5"/><circle cx="1280" cy="350" r="2.5"/><circle cx="1280" cy="620" r="2.5"/>
+        <circle cx="200" cy="0" r="2.5"/><circle cx="640" cy="0" r="2.5"/><circle cx="1080" cy="0" r="2.5"/>
+        <circle cx="300" cy="720" r="2.5"/><circle cx="640" cy="720" r="2.5"/><circle cx="980" cy="720" r="2.5"/>
+      </g>
+      <circle cx="640" cy="360" r="4" fill="#2dd4bf" opacity="0.4"/>
+    </svg>
+
+    <div class="slide-content" style="height:auto; align-items:center; justify-content:center; text-align:center;">
+      <div class="slide-label">11 // The Ask</div>
+
+      <div class="ask-box mw-680 mx-auto">
+        <div class="big-number mb-12">$1.2M</div>
+        <div class="fs-20 fw-semibold mb-8">Independent nonprofit. Operational by Q3 2026.</div>
+        <div class="divider mx-auto" style="max-width:180px;"></div>
+        <div class="body-text fs-15 mw-540 mx-auto">
+          First coordination action day one: Get Daniel's MCB funding situation in front of every relevant funder with specific ask and specific deadline.
+        </div>
+      </div>
+
+      <div class="mt-36 mw-480 mx-auto text-center">
+        <div class="fs-22 fw-bold" style="letter-spacing:-0.5px;">
+          Not a pilot. Not a study.<br><span class="text-teal">The job itself.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="top-accent"></div>
+  </div>
+</div>
+
+</div>
+
+<!-- PDF export libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<!-- NAV -->
+<div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;"></div></div>
+<div class="nav-bar">
+  <button onclick="prevSlide()">&#8592; PREV</button>
+  <div class="dot-nav" id="dotNav"></div>
+  <div class="slide-counter" id="slideCounter">01 / 12</div>
+  <button onclick="nextSlide()">NEXT &#8594;</button>
+  <button id="exportBtn" onclick="exportPDF()" style="margin-left:12px; border-color:rgba(45,212,191,0.3); color:var(--teal);">&#8599; PDF</button>
+</div>
+
+<script>
+/**
+ * CIOC Pitch Deck — Navigation & Scaling Engine
+ *
+ * Handles:
+ *  - Viewport-fitting scale for fixed 1280×720 slides
+ *  - Keyboard / click navigation
+ *  - Dot-nav and progress bar
+ *  - PDF export (per-slide canvas capture → jsPDF)
+ */
+
+(function () {
+  'use strict';
+
+  var SLIDE_W = 1280;
+  var SLIDE_H = 720;
+  var NAV_H   = 50;
+
+  var frames;
+  var current = 0;
+  var total   = 0;
+
+  /* ----------------------------------------------------------
+     Initialisation
+     ---------------------------------------------------------- */
+  function init() {
+    frames = document.querySelectorAll('.slide-frame');
+    total  = frames.length;
+    if (!total) return;
+
+    // Hide ALL slides first, then show slide 0
+    frames.forEach(function(f) { f.style.display = 'none'; });
+
+    buildDotNav();
+    rescale();
+    goTo(0);
+
+    window.addEventListener('resize', rescale);
+    document.addEventListener('keydown', onKey);
+  }
+
+  /* ----------------------------------------------------------
+     Scale each slide-frame to fit the viewport
+     ---------------------------------------------------------- */
+  function rescale() {
+    var vw = window.innerWidth;
+    var vh = window.innerHeight - NAV_H;
+    var scale = Math.min(vw / SLIDE_W, vh / SLIDE_H);
+
+    frames.forEach(function(f) {
+      f.style.transform = 'translate(-50%, -50%) scale(' + scale + ')';
+    });
+  }
+
+  /* ----------------------------------------------------------
+     Navigation
+     ---------------------------------------------------------- */
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    frames[current].style.display = 'none';
+    current = n;
+    frames[current].style.display = 'block';
+    updateUI();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function onKey(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+    if (e.key === 'ArrowLeft')                    { e.preventDefault(); prev(); }
+  }
+
+  /* ----------------------------------------------------------
+     UI updates
+     ---------------------------------------------------------- */
+  function updateUI() {
+    var counter = document.getElementById('slideCounter');
+    if (counter) counter.textContent =
+      String(current + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+
+    var fill = document.getElementById('progressFill');
+    if (fill) fill.style.width = ((current / (total - 1)) * 100) + '%';
+
+    document.querySelectorAll('.dot-nav .dot').forEach(function(d, i) {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function buildDotNav() {
+    var container = document.getElementById('dotNav');
+    if (!container) return;
+    container.innerHTML = '';
+    for (var i = 0; i < total; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.addEventListener('click', (function(idx) {
+        return function() { goTo(idx); };
+      })(i));
+      container.appendChild(dot);
+    }
+  }
+
+  /* ----------------------------------------------------------
+     PDF Export — capture each slide individually to canvas,
+     then assemble into a jsPDF document at 1280×720 per page.
+     Avoids Safari @page bugs and cross-origin rendering issues.
+     ---------------------------------------------------------- */
+  function exportPDF() {
+    if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+      alert('PDF libraries not loaded. Check your internet connection and reload.');
+      return;
+    }
+
+    var btn = document.getElementById('exportBtn');
+    if (btn) { btn.textContent = 'Generating…'; btn.disabled = true; }
+
+    var savedCurrent = current;
+    var nav = document.querySelector('.nav-bar');
+    var prog = document.querySelector('.progress-track');
+
+    // Hide chrome
+    if (nav) nav.style.display = 'none';
+    if (prog) prog.style.display = 'none';
+
+    // Prepare: position all slides for static capture
+    var savedStyles = [];
+    frames.forEach(function(f) {
+      savedStyles.push(f.style.cssText);
+      f.style.cssText =
+        'display:block; position:relative; top:auto; left:auto; ' +
+        'transform:none; width:' + SLIDE_W + 'px; height:' + SLIDE_H + 'px; ' +
+        'margin:0; overflow:hidden;';
+    });
+
+    document.body.style.overflow = 'visible';
+    document.body.style.width = SLIDE_W + 'px';
+    document.body.style.height = 'auto';
+
+    // Capture slides one at a time
+    var jsPDF = jspdf.jsPDF;
+    var pdf = new jsPDF({
+      unit: 'px',
+      format: [SLIDE_W, SLIDE_H],
+      orientation: 'landscape',
+      hotfixes: ['px_scaling'],
+      compress: true
+    });
+
+    var slideIndex = 0;
+
+    function captureNext() {
+      if (slideIndex >= total) {
+        // Done — save and restore
+        pdf.save('cioc-pitch-deck.pdf');
+        restore();
+        return;
+      }
+
+      // Only show the current slide being captured
+      frames.forEach(function(f, i) {
+        f.style.display = (i === slideIndex) ? 'block' : 'none';
+      });
+
+      // Let the browser paint, then capture
+      requestAnimationFrame(function() {
+        setTimeout(function() {
+          html2canvas(frames[slideIndex], {
+            scale: 2,
+            useCORS: true,
+            allowTaint: true,
+            width: SLIDE_W,
+            height: SLIDE_H,
+            windowWidth: SLIDE_W,
+            windowHeight: SLIDE_H,
+            logging: false,
+            backgroundColor: '#080c14'
+          }).then(function(canvas) {
+            var imgData = canvas.toDataURL('image/jpeg', 0.92);
+
+            if (slideIndex > 0) {
+              pdf.addPage([SLIDE_W, SLIDE_H], 'landscape');
+            }
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, SLIDE_W, SLIDE_H);
+
+            if (btn) {
+              btn.textContent = 'Slide ' + (slideIndex + 1) + '/' + total + '…';
+            }
+
+            slideIndex++;
+            captureNext();
+          }).catch(function(err) {
+            console.error('Failed to capture slide ' + slideIndex + ':', err);
+            // Skip this slide and continue
+            slideIndex++;
+            captureNext();
+          });
+        }, 150);
+      });
+    }
+
+    // Wait for images to load, then start capturing
+    setTimeout(captureNext, 600);
+
+    function restore() {
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      document.body.style.height = '';
+
+      if (nav) nav.style.display = '';
+      if (prog) prog.style.display = '';
+
+      frames.forEach(function(f, i) {
+        f.style.cssText = savedStyles[i] || '';
+        f.style.display = 'none';
+        f.style.position = 'absolute';
+        f.style.top = '50%';
+        f.style.left = '50%';
+        f.style.width = SLIDE_W + 'px';
+        f.style.height = SLIDE_H + 'px';
+        f.style.overflow = 'hidden';
+      });
+
+      rescale();
+      goTo(savedCurrent);
+
+      if (btn) { btn.textContent = '\u2197 PDF'; btn.disabled = false; }
+    }
+  }
+
+  /* ----------------------------------------------------------
+     Public API
+     ---------------------------------------------------------- */
+  window.deckNav = { init: init, next: next, prev: prev, goTo: goTo, exportPDF: exportPDF };
+  window.nextSlide = next;
+  window.prevSlide = prev;
+  window.exportPDF = exportPDF;
+
+  /* Auto-init */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
